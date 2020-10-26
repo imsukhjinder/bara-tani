@@ -1,0 +1,15 @@
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    text-rendering: geometricPrecision;
+    font-smooth: always;
+
+    @media (max-width: 1024px) {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
