@@ -1,13 +1,13 @@
 import React from 'react';
 import './styles/index.scss';
 import GameBoard from './components/gameBord';
-import pieceModalConstainer from './components/gamePieceModal';
+import Pieces from './components/piecePositions';
 
-function App() {
-  console.log(pieceModalConstainer);
+function App() {  
   return (
     <>
       <GameBoard />
+      <Pieces />
     </>
   );
 }

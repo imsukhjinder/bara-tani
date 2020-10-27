@@ -1,0 +1,50 @@
+.player {
+    width: rem-calc($piece-size);
+    height: rem-calc($piece-size);
+    border-radius: 50%;
+    margin-bottom: rem-calc($board-size / 4 - $piece-size);
+    margin-right: rem-calc(($board-size / 4) - $piece-size);
+    transform: translateY(-#{rem-calc($piece-size/2)});
+    cursor: pointer;
+
+    &:nth-child(5n) {
+        margin-right: 0;
+    }
+
+    &-1 {
+        background-color: red;
+    }
+
+    &-2 {
+        background-color: green;
+    }
+}
+
+.no-player {
+    background-color: white;
+    box-shadow: 0 0 7px 2px black;
+}
+
+.piece-modal {
+    &-outer {
+        position: absolute;
+        top: 0;
+        display: flex;
+        flex-wrap: wrap;
+        width: rem-calc($board-size + $piece-size);
+        height: rem-calc($board-size + $piece-size);
+        margin-left: 50%;
+        transform: translateX(-50%);
+        margin-top: 50px;
+    }
+
+    &-view {
+        pointer-events: none;
+    }
+}
+
+.player-on-view {
+    pointer-events: none;
+    position: absolute;
+}
+
