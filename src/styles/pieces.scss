@@ -18,6 +18,11 @@
     &-2 {
         background-color: green;
     }
+
+    &-position {
+        font-weight: bold;
+        font-size: 13px;
+    }
 }
 
 .no-player {
@@ -36,15 +41,21 @@
         margin-left: 50%;
         transform: translateX(-50%);
         margin-top: 50px;
+        margin-bottom: 50px;
+        overflow: hidden;
+        z-index: 10;
     }
 
     &-view {
         pointer-events: none;
+        top: -#{rem-calc($piece-size/2)};
+         z-index: 1;
     }
 }
 
 .player-on-view {
     pointer-events: none;
     position: absolute;
+    transition: 0.3s ease-in-out;
 }
 
