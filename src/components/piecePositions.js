@@ -1,47 +1,70 @@
 import React, {Component} from "react";
-import pieceModalConstainer from "./gamePieceModal";
-import {destroyPiece} from './gameFunctions';
+import {pieceModalContainer} from "./gamePieceModal";
 
 class Pieces extends Component {
 
-  state = { pieceModalConstainer: pieceModalConstainer, firstClick: -1 }
+  state = { 
+    modalState: JSON.parse(JSON.stringify(pieceModalContainer)), 
+    playerPicked: 'null',
+    goingTo: 'null', 
+  }
 
-  gamePlay = (piece,index) => {
-    let newModal = this.state.pieceModalConstainer;
-    
-    if(this.state.firstClick === -1) {
-      this.setState({firstClick: index});
-      // alert('player picked ' + this.state.firstClick);
+  setPosition = (playerPicked,goingTo) => {
+    debugger;
+    let newModal = this.state.modalState;
+    newModal[playerPicked].xPos = pieceModalContainer[goingTo].xPos;
+    newModal[playerPicked].yPos = pieceModalContainer[goingTo].yPos;
+    pieceModalContainer[goingTo].playerOnPosition = playerPicked;
+ 
+
+    this.setState({
+      modalState: newModal,
+      playerPicked: 'null'
+    });
+  }
+
+  gamePlay = (index) => {
+    if(this.state.playerPicked === 'null') {
+      debugger
+      this.setState({playerPicked: index});
     }
     else {
-      alert('player picked ' + this.state.firstClick);
-      newModal[this.state.firstClick].xPos = pieceModalConstainer[index].xPos;
-      newModal[this.state.firstClick].yPos = pieceModalConstainer[index].yPos;
-      this.setState({firstClick: -1});
-      // alert('player picked ' + this.state.firstClick);
+      this.setState({goingTo: parseInt(index)});
+      this.setPosition(this.state.playerPicked,index);
     }
 
-    this.setState({pieceModalConstainer: newModal});
   }
 
   render() {
-    destroyPiece(12);
-    
     return(
       <>
         <div className="piece-modal-outer" >
-          {this.state.pieceModalConstainer.map( (piece,index) =>
-            <div key={piece.name} onClick={() => this.gamePlay(piece,index)} className={`player player-position`}>{index}</div>
+          {pieceModalContainer.map( (piece,index) =>
+            <div 
+            key={piece.name} 
+            onClick={() => this.gamePlay(piece.playerOnPosition)} 
+            className={`player player-position`}
+            // data-x={piece.xPos} 
+            // data-y={piece.yPos} 
+            >
+              {index}
+            </div>
           )}
         </div>
         <div className="piece-modal-outer piece-modal-view" >
-          {this.state.pieceModalConstainer.map( (piece) =>
+          {this.state.modalState.map( (piece) =>
             <div 
-              key={piece.name} 
-              className={`player player-on-view ${piece.playerOnPosition} ${piece.name}`} 
+              key={`p${piece.name}`} 
+              className={`player player-on-view ${piece.playerColor} p${piece.name}`} 
               style={{transform: `translate(${piece.xPos}px,${piece.yPos}px)`}}
+              // data-x={piece.xPos} 
+              // data-y={piece.yPos}
             />
           )}
+        </div>
+        <div className="message-Modal" >
+            Player Picked {this.state.playerPicked} <br />
+            Going To {this.state.goingTo}
         </div>
       </>
     )

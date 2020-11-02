@@ -1,17 +1,18 @@
-let pieceModalConstainer = [];
+export let pieceModalContainer = [];
 let boardSize= 700;
 
 class PieceModal {
-  constructor(name,xPos,yPos,playerOnPosition) {
+  constructor(name,xPos,yPos,playerColor) {
     this.name = name;
     this.positionTaken = 'true';
-    this.playerOnPosition = playerOnPosition;
+    this.playerOnPosition = name;
+    this.playerColor = playerColor;
     this.xPos = xPos;
     this.yPos = yPos;
   }
 }
 
-let xPos,yPos,playerOnPosition;
+let xPos,yPos,playerColor;
 
 for (let i = 0; i <25 ; i++) {
   if((i%5) === 0) {
@@ -47,13 +48,14 @@ for (let i = 0; i <25 ; i++) {
   }
 
   if(i < 13) {
-    playerOnPosition = 'player-1'
+    playerColor = 'player-1'
   }
   else {
-    playerOnPosition = 'player-2'
+    playerColor = 'player-2'
   }
 
-  pieceModalConstainer.push(new PieceModal(`b${i}`,xPos,yPos,playerOnPosition));
+  pieceModalContainer.push(new PieceModal(i,xPos,yPos,playerColor));
 }
 
-export default pieceModalConstainer;
+pieceModalContainer[12].positionTaken = 'false';
+pieceModalContainer[12].playerColor = "no-player";

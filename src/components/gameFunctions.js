@@ -1,11 +1,11 @@
-import pieceModalConstainer from './gamePieceModal';
+import {pieceModalContainer} from './gamePieceModal';
 
 export function destroyPiece(pieceNum) {
-    pieceModalConstainer[pieceNum].positionTaken = 'false';
-    pieceModalConstainer[pieceNum].playerOnPosition = "no-player";
+    pieceModalContainer[pieceNum].positionTaken = 'false';
+    pieceModalContainer[pieceNum].playerOnPosition = "no-player";
 }
 
 export function setPlayer (playerPosition,playerName) {
-    pieceModalConstainer[playerPosition].positionTaken = 'true';
-    pieceModalConstainer[playerPosition].playerOnPosition = playerName;
+    pieceModalContainer[playerPosition].positionTaken = 'true';
+    pieceModalContainer[playerPosition].playerOnPosition = playerName;
 }
