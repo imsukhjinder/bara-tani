@@ -22,12 +22,15 @@
     &-position {
         font-weight: bold;
         font-size: 13px;
+        cursor: pointer;
     }
 }
 
 .no-player {
     background-color: white;
     box-shadow: 0 0 7px 2px black;
+    pointer-events: none;
+    display: none;
 }
 
 .piece-modal {
@@ -47,14 +50,11 @@
     }
 
     &-view {
-        pointer-events: none;
         top: -#{rem-calc($piece-size/2)};
-         z-index: 1;
     }
 }
 
 .player-on-view {
-    pointer-events: none;
     position: absolute;
     transition: 0.3s ease-in-out;
 }
@@ -68,4 +68,8 @@
     color: #fff;
     font-size: 20px;
     font-weight: bold;
+}
+
+.dead-player {
+    display: none !important;
 }
