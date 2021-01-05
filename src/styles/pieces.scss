@@ -4,7 +4,7 @@
     border-radius: 50%;
     margin-bottom: rem-calc($board-size / 4 - $piece-size);
     margin-right: rem-calc(($board-size / 4) - $piece-size);
-    transform: translateY(-#{rem-calc($piece-size/2)});
+    // transform: translateY(-#{rem-calc($piece-size/2)});
     cursor: pointer;
 
     &:nth-child(5n) {
@@ -23,14 +23,9 @@
         font-weight: bold;
         font-size: 13px;
         cursor: pointer;
+        border: 1px solid black;
+        background: #fff;
     }
-}
-
-.no-player {
-    background-color: white;
-    box-shadow: 0 0 7px 2px black;
-    pointer-events: none;
-    display: none;
 }
 
 .piece-modal {

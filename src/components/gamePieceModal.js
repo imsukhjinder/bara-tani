@@ -58,4 +58,4 @@ for (let i = 0; i <25 ; i++) {
 }
 
 pieceModalContainer[12].positionTaken = 'false';
-pieceModalContainer[12].playerColor = "no-player";
+pieceModalContainer[12].playerColor = "dead-player";

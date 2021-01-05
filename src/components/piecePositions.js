@@ -35,6 +35,7 @@ class Pieces extends Component {
         this.setState({
           playerPicked: playerGoing
         });
+        // alert('player picked ' + playerGoing);
       }
       else {
         alert('Move not allowed');
@@ -49,7 +50,7 @@ class Pieces extends Component {
   checkDeath(start,end) {
     let dead = false;
     let positionValue = start - end;
-    alert(positionValue+','+start+','+end);
+    // alert(positionValue+','+start+','+end);
 
     if(positionValue === 2) {
       dead = end + 1;
@@ -88,16 +89,7 @@ class Pieces extends Component {
       dead = end - 5;
     }
 
-    if(dead) {
-      alert(dead + ' is dead');
-      let newModal = this.state.modalState;
-      let deadPlayerIndex = newModal.find(e => e.playerOnPosition === dead);
-      newModal[deadPlayerIndex.name].playerColor = 'dead-player';
-      this.setState({
-        modalState: newModal
-      });
-    }
-
+    return dead;
   }
 
   placePlayer = (name,xPos,yPos) => {
@@ -105,15 +97,27 @@ class Pieces extends Component {
       alert('no player picked') 
     }
     else {
+      // alert('player going to '+ name);
       let newModal = this.state.modalState;
-      console.log(newModal);
-      newModal[this.state.playerPicked].xPos = xPos;
-      newModal[this.state.playerPicked].yPos = yPos;
-      newModal[this.state.playerPicked].playerOnPosition = name;
-      this.setState({
-        modalState: newModal
-      });
-      this.checkDeath(this.state.playerPicked,name);
+      // console.log(newModal);
+
+      // console.log(newModal.find(e => e.playerOnPosition === this.state.playerPicked ));
+      let playerMoving = newModal.find(e => e.playerOnPosition === this.state.playerPicked && e.playerColor !== "dead-player" );
+      newModal[playerMoving.name].xPos = xPos;
+      newModal[playerMoving.name].yPos = yPos;
+      newModal[playerMoving.name].playerOnPosition = name;
+
+      let dead = this.checkDeath(this.state.playerPicked,name);
+      if(dead) {
+        alert(dead + ' is dead');
+        
+        let deadPlayerIndex = newModal.find(e => (e.playerOnPosition === dead && e.playerColor !== "dead-player"));
+        console.log(deadPlayerIndex)
+        newModal[deadPlayerIndex.name].playerColor = 'dead-player';
+        this.setState({
+          modalState: newModal
+        });
+      }
       this.playerPickedNull();
       this.turnChange();
     }
@@ -139,7 +143,8 @@ class Pieces extends Component {
               key={`p${index}`} 
               className={`player player-on-view ${piece.playerColor} p${piece.playerOnPosition}`} 
               style={{transform: `translate(${piece.xPos}px,${piece.yPos}px)`}}
-              onClick={() => this.pickingPlayer(piece.playerColor,parseInt(index))} 
+              onClick={() => this.pickingPlayer(piece.playerColor,parseInt(piece.playerOnPosition))} 
+              data-on-position={piece.playerOnPosition}
               // data-x={piece.xPos} 
               // data-y={piece.yPos}
             />
