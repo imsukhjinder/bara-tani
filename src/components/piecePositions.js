@@ -7,7 +7,11 @@ class Pieces extends Component {
     modalState: JSON.parse(JSON.stringify(pieceModalContainer)), 
     playerPicked: 'null',
     goingTo: 'null',
-    turn: 'player-1' 
+    turn: 'player-1',
+    playerOneDead: 0,
+    playerTwoDead: 0,
+    timerMin: 2,
+    timerSec: 0
   }
 
   playerPickedNull = () => {
@@ -35,7 +39,6 @@ class Pieces extends Component {
         this.setState({
           playerPicked: playerGoing
         });
-        // alert('player picked ' + playerGoing);
       }
       else {
         alert('Move not allowed');
@@ -47,10 +50,9 @@ class Pieces extends Component {
     }
   }
 
-  checkDeath(start,end) {
+  checkDeath = (start,end) => {
     let dead = false;
     let positionValue = start - end;
-    // alert(positionValue+','+start+','+end);
 
     if(positionValue === 2) {
       dead = end + 1;
@@ -97,11 +99,7 @@ class Pieces extends Component {
       alert('no player picked') 
     }
     else {
-      // alert('player going to '+ name);
       let newModal = this.state.modalState;
-      // console.log(newModal);
-
-      // console.log(newModal.find(e => e.playerOnPosition === this.state.playerPicked ));
       let playerMoving = newModal.find(e => e.playerOnPosition === this.state.playerPicked && e.playerColor !== "dead-player" );
       newModal[playerMoving.name].xPos = xPos;
       newModal[playerMoving.name].yPos = yPos;
@@ -109,19 +107,39 @@ class Pieces extends Component {
 
       let dead = this.checkDeath(this.state.playerPicked,name);
       if(dead) {
-        alert(dead + ' is dead');
+        //alert(dead + ' is dead');
         
         let deadPlayerIndex = newModal.find(e => (e.playerOnPosition === dead && e.playerColor !== "dead-player"));
-        console.log(deadPlayerIndex)
+        let playerDead = newModal[deadPlayerIndex.name].playerColor;
+
+        if(playerDead === 'player-1') {
+          this.setState({
+            playerOneDead: this.state.playerOneDead + 1
+          });
+        }
+
+        if(playerDead === 'player-2') {
+          this.setState({
+            playerTwoDead: this.state.playerTwoDead + 1
+          });
+        }
+
         newModal[deadPlayerIndex.name].playerColor = 'dead-player';
         this.setState({
           modalState: newModal
         });
       }
       this.playerPickedNull();
-      this.turnChange();
     }
   }
+
+  // turnTimer = () => {
+  //   let time = (this.state.timerMin * 60) + this.state.timerSec;
+
+  //   setInterval(()=> {
+  //     time--;
+  //   },1000);
+  // }
 
   render() {
     return(
@@ -132,8 +150,6 @@ class Pieces extends Component {
             key={piece.name} 
             onClick={() => this.placePlayer(index,piece.xPos,piece.yPos)} 
             className={`player player-position`}
-            // data-x={piece.xPos} 
-            // data-y={piece.yPos} 
             >
               {index}
             </div>
@@ -145,14 +161,25 @@ class Pieces extends Component {
               style={{transform: `translate(${piece.xPos}px,${piece.yPos}px)`}}
               onClick={() => this.pickingPlayer(piece.playerColor,parseInt(piece.playerOnPosition))} 
               data-on-position={piece.playerOnPosition}
-              // data-x={piece.xPos} 
-              // data-y={piece.yPos}
             />
           )}
         </div>
-        <div className="message-Modal" >
-            Player Picked {this.state.playerPicked} <br />
-            Going To {this.state.goingTo}
+        <div className={`side-modal side-modal-1 ${this.state.turn === "player-2" ? 'disabled' : ''}`}>
+          <div className="message-Modal" >
+              Player 1 Board <br />
+              Player Dead {this.state.playerOneDead}
+          </div>
+          <div className="game-timer" >
+            {this.state.timerMin}:{this.state.timerSec}
+          </div>
+          <button className="" onClick={this.turnChange}>Turn Change</button>
+        </div>
+        <div className={`side-modal side-modal-2 ${this.state.turn === "player-1" ? 'disabled' : ''}`}>
+          <div className="message-Modal" >
+              Player 2 Board <br />
+              Player Dead {this.state.playerTwoDead}
+          </div>
+          <button className="" onClick={this.turnChange}>Turn Change</button>
         </div>
       </>
     )

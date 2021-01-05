@@ -55,9 +55,6 @@
 }
 
 .message-Modal {
-    position: absolute;
-    top: 20px;
-    right: 20px;
     background: red;
     padding: 20px;
     color: #fff;
@@ -67,4 +64,21 @@
 
 .dead-player {
     display: none !important;
+}
+
+.side-modal {
+    position: absolute;
+    top: 20px;
+
+    &-1 {
+        left: 20px;
+    }
+
+    &-2 {
+        right: 20px;
+    }
+
+    &.disabled {
+        opacity: 0.2;
+    }
 }
