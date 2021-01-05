@@ -10,8 +10,10 @@ class Pieces extends Component {
     turn: 'player-1',
     playerOneDead: 0,
     playerTwoDead: 0,
-    timerMin: 2,
-    timerSec: 0
+    timerMin: 0,
+    timerSec: 0,
+    timerMinPlyer2: 0,
+    timerSecPlyer2: 0
   }
 
   playerPickedNull = () => {
@@ -25,11 +27,15 @@ class Pieces extends Component {
       this.setState({
         turn: 'player-2' 
       });
+      this.turnTimerTwo();
+      clearInterval(this.ts);
     }
     else {
       this.setState({
         turn: 'player-1'
       });
+      this.turnTimerOne();
+      clearInterval(this.ts2);
     }
   }
 
@@ -118,10 +124,18 @@ class Pieces extends Component {
           });
         }
 
+        if(this.state.playerOneDead === 12) {
+          alert("Player 2 wins")
+        }
+
         if(playerDead === 'player-2') {
           this.setState({
             playerTwoDead: this.state.playerTwoDead + 1
           });
+        }
+
+        if(this.state.playerTwoDead === 12) {
+          alert("Player 1 wins")
         }
 
         newModal[deadPlayerIndex.name].playerColor = 'dead-player';
@@ -133,13 +147,65 @@ class Pieces extends Component {
     }
   }
 
-  // turnTimer = () => {
-  //   let time = (this.state.timerMin * 60) + this.state.timerSec;
+  turnTimerOne = () => {
+      let time = 120;
+      this.ts = setInterval(()=> {
+        let mints = Math.floor(time/60);
+        let sec = time % 60;
+        sec = sec < 10 ? '0' + sec : sec;
 
-  //   setInterval(()=> {
-  //     time--;
-  //   },1000);
-  // }
+        this.setState({
+          timerMin: mints,
+          timerSec: sec
+        })
+
+        time--;
+
+        if(time === 0) {
+          this.turnChange();
+          let newModal = this.state.modalState;
+          let deadPlayerIndex = newModal.find(e => (e.playerColor === "player-1"));
+          newModal[deadPlayerIndex.name].playerColor = 'dead-player';
+          this.setState({
+            modalState: newModal
+          });
+          alert("player 1 died");
+        }
+
+      },1000);
+  }
+
+  turnTimerTwo = () => {
+      let time = 120;
+      this.ts2 = setInterval(()=> {
+        let mints = Math.floor(time/60);
+        let sec = time % 60;
+        sec = sec < 10 ? '0' + sec : sec;
+
+        this.setState({
+          timerMinPlyer2: mints,
+          timerSecPlyer2: sec
+        })
+
+        time--;
+
+        if(time === 0) {
+          this.turnChange();
+          let newModal = this.state.modalState;
+          let deadPlayerIndex = newModal.find(e => (e.playerColor === "player-2"));
+          newModal[deadPlayerIndex.name].playerColor = 'dead-player';
+          this.setState({
+            modalState: newModal
+          });
+          alert("player 2 died");
+        }
+
+      },1000);
+  }
+
+  componentDidMount () {
+    this.turnTimerOne();
+  }
 
   render() {
     return(
@@ -178,6 +244,9 @@ class Pieces extends Component {
           <div className="message-Modal" >
               Player 2 Board <br />
               Player Dead {this.state.playerTwoDead}
+          </div>
+           <div className="game-timer" >
+            {this.state.timerMinPlyer2}:{this.state.timerSecPlyer2}
           </div>
           <button className="" onClick={this.turnChange}>Turn Change</button>
         </div>
