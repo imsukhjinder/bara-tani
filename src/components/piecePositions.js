@@ -12,7 +12,7 @@ class Pieces extends Component {
     playerTwoDead: 0,
     timerMin: 0,
     timerSec: 0,
-    turnTime: 20,
+    turnTime: 120,
     paused: false,
     pausedTime: 0
   }
@@ -24,6 +24,7 @@ class Pieces extends Component {
   }
 
   turnChange = () => {
+    this.playerPickedNull();
     clearInterval(this.ts);
 
     if(this.state.turn === 'player-1') {
@@ -80,12 +81,12 @@ class Pieces extends Component {
     if(positionValue === -8) {
       dead = end - 4;
     }
-    if(positionValue === 9) {
-      dead = end + 5;
-    }
-    if(positionValue === -9) {
-      dead = end - 5;
-    }
+    // if(positionValue === 9) {
+    //   dead = end + 5;
+    // }
+    // if(positionValue === -9) {
+    //   dead = end - 5;
+    // }
     if(positionValue === 10) {
       dead = end + 5;
     }
@@ -98,11 +99,20 @@ class Pieces extends Component {
     if(positionValue === -12) {
       dead = end - 6;
     }
-    if(positionValue === 16) {
-      dead = end + 5;
-    }
-    if(positionValue === -16) {
-      dead = end - 5;
+    // if(positionValue === 16) {
+    //   dead = end + 5;
+    // }
+    // if(positionValue === -16) {
+    //   dead = end - 5;
+    // }
+
+    if(dead) {
+      let deadPlayerIndex = this.state.modalState.find(e => (e.playerOnPosition === dead && e.playerColor !== "dead-player"));
+      let playerDead = this.state.modalState[deadPlayerIndex.name].playerColor;
+
+      if(this.state.turn === playerDead) {
+        dead = false;
+      }
     }
 
     return dead;
@@ -116,8 +126,8 @@ class Pieces extends Component {
     moveValue === 1  || 
     moveValue === 5 || 
     moveValue === -5 || 
-    moveValue === 6 || 
-    moveValue === -6 || 
+    (moveValue === 6 && start%2 === 0 && end%2 === 0) || 
+    (moveValue === -6 && start%2 === 0 && end%2 === 0) || 
     (moveValue === 4 && start%2 === 0 && end%2 === 0) || 
     (moveValue === -4 && start%2 === 0 && end%2 === 0) ;
 
@@ -133,7 +143,6 @@ class Pieces extends Component {
       alert('no player picked') 
     }
     else {
-
       let legalMove = this.checkLegalMove(this.state.playerPicked,name);
       let dead = this.checkDeath(this.state.playerPicked,name);
       let newModal = this.state.modalState;
@@ -145,12 +154,11 @@ class Pieces extends Component {
         newModal[playerMoving.name].playerOnPosition = name;
       }
       else {
-        alert('wrong Move');
+        alert('wrong Move,'+legalMove+','+dead);
       }
 
       if(dead) {
         //alert(dead + ' is dead');
-        
         let deadPlayerIndex = newModal.find(e => (e.playerOnPosition === dead && e.playerColor !== "dead-player"));
         let playerDead = newModal[deadPlayerIndex.name].playerColor;
 
@@ -238,7 +246,6 @@ class Pieces extends Component {
 
   gameStop = () => {
     clearInterval(this.ts);
-    clearInterval(this.ts2);
     this.setState({
       modalState: JSON.parse(JSON.stringify(pieceModalContainer)), 
       playerPicked: 'null',
