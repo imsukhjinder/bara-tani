@@ -1,6 +1,10 @@
-Add 2x moves
+Undo Last Move
 Change UI
 Add Game Animations
 Add Game Audios
 Make Game Online 2 player
 Add calling with game
+
+Bugs:-
+User can change turn by just moving backward-forward player
+User can move player after second move or opponent player death

@@ -14,54 +14,40 @@ class Pieces extends Component {
     timerSec: 0,
     turnTime: 120,
     paused: false,
-    pausedTime: 0
+    pausedTime: 0,
+    moveDone: false
   }
 
   playerPickedNull = () => {
     this.setState({
-      playerPicked: 'null'
+      playerPicked: 'null',
+      moveDone: false
     });
   }
 
   turnChange = () => {
-    this.playerPickedNull();
-    clearInterval(this.ts);
+    if(this.state.moveDone) {
+      this.playerPickedNull();
+      clearInterval(this.ts);
 
-    if(this.state.turn === 'player-1') {
-      this.setState({
-        turn: 'player-2'
-      });  
-    }
-    else {
-      this.setState({
-        turn: 'player-1'
-      });
-    }
-    this.setState({
-      timerMin: 0,
-      timerSec: 0
-    });
-    this.turnTimerOn();
-  }
-
-  pickingPlayer = (playerPlaying,playerGoing) => {
-    if(playerPlaying === this.state.turn) {
-      if(this.state.playerPicked === 'null') {
+      if(this.state.turn === 'player-1') {
         this.setState({
-          playerPicked: playerGoing
-        });
+          turn: 'player-2'
+        });  
       }
       else {
-        alert('Move not allowed');
-        this.playerPickedNull();
-      } 
-    }
-    else if(playerPlaying !== this.state.turn && this.state.playerPicked !== 'null') {
-      alert('Wrong Move');
-      this.playerPickedNull();
+        this.setState({
+          turn: 'player-1'
+        });
+      }
+      this.setState({
+        timerMin: 0,
+        timerSec: 0
+      });
+      this.turnTimerOn();
     }
     else {
-      alert('Not your player' + playerPlaying);
+      alert("Can't Change Turn Without moving any Player")
     }
   }
 
@@ -138,7 +124,30 @@ class Pieces extends Component {
     return move;
   }
 
+  pickingPlayer = (playerPlaying,playerGoing) => {
+    // console.log(playerPlaying,playerGoing);
+    if(playerPlaying === this.state.turn) {
+      if(this.state.playerPicked === 'null') {
+        this.setState({
+          playerPicked: playerGoing
+        });
+      }
+      else {
+        alert('Move not allowed');
+        this.playerPickedNull();
+      } 
+    }
+    else if(playerPlaying !== this.state.turn && this.state.playerPicked !== 'null') {
+      alert('Wrong Move');
+      this.playerPickedNull();
+    }
+    else {
+      alert('Not your player' + playerPlaying);
+    }
+  }
+
   placePlayer = (name,xPos,yPos) => {
+    // console.log(name,xPos,yPos);
     if(this.state.playerPicked === 'null') {
       alert('no player picked') 
     }
@@ -152,6 +161,11 @@ class Pieces extends Component {
         newModal[playerMoving.name].xPos = xPos;
         newModal[playerMoving.name].yPos = yPos;
         newModal[playerMoving.name].playerOnPosition = name;
+        this.playerPickedNull();
+        
+        this.setState({
+          moveDone: true
+        });
       }
       else {
         alert('wrong Move,'+legalMove+','+dead);
@@ -189,7 +203,9 @@ class Pieces extends Component {
           this.gameStop();
         }
       }
-      this.playerPickedNull();
+      this.setState({
+        playerPicked: name
+      });
     }
   }
 
@@ -228,7 +244,8 @@ class Pieces extends Component {
 
           newModal[deadPlayerIndex.name].playerColor = 'dead-player';
           this.setState({
-            modalState: newModal
+            modalState: newModal,
+            moveDone: true
           });
           alert("player died");
           this.turnChange();
@@ -279,6 +296,10 @@ class Pieces extends Component {
     })
   }
 
+  undoMove = () => {
+    alert("Will be working Shortly");
+  }
+
   render() {
     return(
       <>
@@ -286,9 +307,10 @@ class Pieces extends Component {
           <button onClick={this.gameStart}>Start Game</button>
           <button onClick={this.gamePause}>Pause Game</button>
           <button onClick={this.gamePlay} disabled={!this.state.paused}>Play Game</button>
+          <button onClick={this.undoMove}>Undo Last Move</button>
           <button onClick={this.gameStop}>Quit Game</button>
         </div>
-        <div className="piece-modal-outer piece-modal-view" >
+        <div className={`piece-modal-outer piece-modal-view ${this.state.turn === 'no-one' ? 'disabled' : ''}`} >
           {pieceModalContainer.map( (piece,index) =>
             <div 
             key={piece.name} 
