@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {pieceModalContainer} from "./gamePieceModal";
+import {KillIcon} from './icons';
 
 class Pieces extends Component {
 
@@ -304,11 +305,37 @@ class Pieces extends Component {
     return(
       <>
         <div className="nav-top">
-          <button onClick={this.gameStart}>Start Game</button>
-          <button onClick={this.gamePause}>Pause Game</button>
-          <button onClick={this.gamePlay} disabled={!this.state.paused}>Play Game</button>
-          <button onClick={this.undoMove}>Undo Last Move</button>
-          <button onClick={this.gameStop}>Quit Game</button>
+          <button className="btn btn-neon" onClick={this.gameStart}>
+            <span></span>  
+            <span></span>  
+            <span></span>  
+            <span></span>  
+            Start
+          </button>
+          <button className="btn btn-neon" onClick={this.gamePause}>
+            <span></span>  
+            <span></span>  
+            <span></span>  
+            <span></span> 
+            Pause</button>
+          <button className="btn btn-neon" onClick={this.gamePlay} disabled={!this.state.paused}>
+            <span></span>  
+            <span></span>  
+            <span></span>  
+            <span></span> 
+            Play</button>
+          <button className="btn btn-neon" onClick={this.undoMove}>
+            <span></span>  
+            <span></span>  
+            <span></span>  
+            <span></span> 
+            Undo</button>
+          <button className="btn btn-neon mr-0" onClick={this.gameStop}>
+            <span></span>  
+            <span></span>  
+            <span></span>  
+            <span></span> 
+            Quit</button>
         </div>
         <div className={`piece-modal-outer piece-modal-view ${this.state.turn === 'no-one' ? 'disabled' : ''}`} >
           {pieceModalContainer.map( (piece,index) =>
@@ -332,23 +359,35 @@ class Pieces extends Component {
         </div>
         <div className={`side-modal side-modal-1 ${this.state.turn !== "player-1" ? 'disabled' : ''}`}>
           <div className="message-Modal" >
-              Player 1 Board <br />
-              Player Dead {this.state.playerOneDead}
+              <h1 className="board-heading">Player 1</h1>
+              <h2>Kills {this.state.playerTwoDead}</h2>
+              <h3>Dead {this.state.playerOneDead}</h3>
+              <div className="game-timer" >
+                {this.state.turn === "player-1" ? `${this.state.timerMin}:${this.state.timerSec}` : '0:00'}
+              </div>
+              <button className="btn btn-neon  turn-change" onClick={this.turnChange}>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Turn Change
+              </button>
           </div>
-          <div className="game-timer" >
-            {this.state.turn === "player-1" ? `${this.state.timerMin}:${this.state.timerSec}` : '0:00'}
-          </div>
-          <button className="" onClick={this.turnChange}>Turn Change</button>
         </div>
         <div className={`side-modal side-modal-2 ${this.state.turn !== "player-2" ? 'disabled' : ''}`}>
           <div className="message-Modal" >
-              Player 2 Board <br />
-              Player Dead {this.state.playerTwoDead}
+              <h1 className="board-heading">Player 2</h1>
+              <h2> Kills {this.state.playerOneDead}</h2>
+              <h3>Dead {this.state.playerTwoDead}</h3>
+              <div className="game-timer" >
+                {this.state.turn === "player-2" ? `${this.state.timerMin}:${this.state.timerSec}` : '0:00'}
+              </div>
+              <button className="btn btn-neon turn-change" onClick={this.turnChange}>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>Turn Change</button>
           </div>
-           <div className="game-timer" >
-            {this.state.turn === "player-2" ? `${this.state.timerMin}:${this.state.timerSec}` : '0:00'}
-          </div>
-          <button className="" onClick={this.turnChange}>Turn Change</button>
         </div>
       </>
     )

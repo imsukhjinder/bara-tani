@@ -1,5 +1,5 @@
 export let pieceModalContainer = [];
-let boardSize= 700;
+let boardSize= 570;
 
 class PieceModal {
   constructor(name,xPos,yPos,playerColor) {
