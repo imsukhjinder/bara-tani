@@ -12,19 +12,48 @@
     }
 
     &-1 {
-        background-color: red;
+        $player-color: #f85f54;
+
+        background-color: rgba($player-color,1);
+        box-shadow: 0 0 20px rgba($player-color,1),
+                    0 0 40px rgba($player-color,1),
+                    0 0 60px rgba($player-color,1),
+                    0 0 80px rgba($player-color,1),
+                    0 0 0 8px rgba($player-color,.1);
+
+        &.active-player {
+            box-shadow: 0 0 20px rgba($player-color,1),
+                        0 0 40px rgba($player-color,1),
+                        0 0 60px rgba($player-color,1),
+                        0 0 80px rgba($player-color,1),
+                        0 0 0 8px rgba($player-color,.1) !important;
+        }
     }
 
     &-2 {
-        background-color: green;
+        $player-color2: #05e9ca;
+
+        background-color: rgba($player-color2,1);
+        box-shadow: 0 0 20px rgba($player-color2,1),
+                    0 0 40px rgba($player-color2,1),
+                    0 0 60px rgba($player-color2,1),
+                    0 0 80px rgba($player-color2,1),
+                    0 0 0 8px rgba($player-color2,.1);
+        &.active-player {
+            box-shadow: 0 0 20px rgba($player-color2,1),
+                    0 0 40px rgba($player-color2,1),
+                    0 0 60px rgba($player-color2,1),
+                    0 0 80px rgba($player-color2,1),
+                    0 0 0 8px rgba($player-color2,.1) !important;
+        }
     }
 
     &-position {
         font-weight: bold;
         font-size: 13px;
         cursor: pointer;
-        border: 1px solid black;
-        background: #fff;
+        border: 1px solid $board-border-color;
+        background: $bg-color;
     }
 }
 
@@ -40,7 +69,6 @@
         transform: translateX(-50%);
         margin-top: 50px;
         margin-bottom: 50px;
-        overflow: hidden;
         z-index: 10;
     }
 
@@ -91,10 +119,13 @@
     &-2 {
         right: 40px;
     }
+
+    &.disabled {
+        opacity: 0.2;
+    }
 }
 
 .disabled {
-    // opacity: 0.2;
     pointer-events: none;
     cursor: not-allowed;
 }
@@ -226,4 +257,11 @@
 
 .mr-0 {
     margin-right: 0 !important;
+}
+
+.game-started {
+    .player-1,
+    .player-2 {
+        box-shadow: none;
+    }
 }

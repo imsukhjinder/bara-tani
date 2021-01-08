@@ -16,40 +16,37 @@ class Pieces extends Component {
     turnTime: 120,
     paused: false,
     pausedTime: 0,
-    moveDone: false
+    currentActive: 12
   }
 
   playerPickedNull = () => {
     this.setState({
-      playerPicked: 'null',
-      moveDone: false
+      playerPicked: 'null'
     });
   }
 
   turnChange = () => {
-    if(this.state.moveDone) {
-      this.playerPickedNull();
-      clearInterval(this.ts);
+    this.playerPickedNull();
+    clearInterval(this.ts);
+    let newModal = this.state.modalState;
+    newModal[this.state.currentActive].active = false;
 
-      if(this.state.turn === 'player-1') {
-        this.setState({
-          turn: 'player-2'
-        });  
-      }
-      else {
-        this.setState({
-          turn: 'player-1'
-        });
-      }
+    if(this.state.turn === 'player-1') {
       this.setState({
-        timerMin: 0,
-        timerSec: 0
-      });
-      this.turnTimerOn();
+        turn: 'player-2'
+      });  
     }
     else {
-      alert("Can't Change Turn Without moving any Player")
+      this.setState({
+        turn: 'player-1'
+      });
     }
+    this.setState({
+      timerMin: 0,
+      timerSec: 0,
+      modalState: newModal
+    });
+    this.turnTimerOn();
   }
 
   checkDeath = (start,end) => {
@@ -125,12 +122,16 @@ class Pieces extends Component {
     return move;
   }
 
-  pickingPlayer = (playerPlaying,playerGoing) => {
-    // console.log(playerPlaying,playerGoing);
+  pickingPlayer = (playerPlaying,playerGoing,index) => {
     if(playerPlaying === this.state.turn) {
       if(this.state.playerPicked === 'null') {
+        let newModal = this.state.modalState;
+        newModal[index].active = true;
+
         this.setState({
-          playerPicked: playerGoing
+          playerPicked: playerGoing,
+          currentActive: index,
+          modalState: newModal
         });
       }
       else {
@@ -163,10 +164,6 @@ class Pieces extends Component {
         newModal[playerMoving.name].yPos = yPos;
         newModal[playerMoving.name].playerOnPosition = name;
         this.playerPickedNull();
-        
-        this.setState({
-          moveDone: true
-        });
       }
       else {
         alert('wrong Move,'+legalMove+','+dead);
@@ -245,8 +242,7 @@ class Pieces extends Component {
 
           newModal[deadPlayerIndex.name].playerColor = 'dead-player';
           this.setState({
-            modalState: newModal,
-            moveDone: true
+            modalState: newModal
           });
           alert("player died");
           this.turnChange();
@@ -274,7 +270,8 @@ class Pieces extends Component {
       timerMin: 0,
       timerSec: 0,
       paused: false,
-      pausedTime: 0
+      pausedTime: 0,
+      currentActive: 12
     })
   }
 
@@ -312,6 +309,12 @@ class Pieces extends Component {
             <span></span>  
             Start
           </button>
+          <button className="btn btn-neon turn-change" onClick={this.turnChange}>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>Turn Change
+          </button>
           <button className="btn btn-neon" onClick={this.gamePause}>
             <span></span>  
             <span></span>  
@@ -337,22 +340,20 @@ class Pieces extends Component {
             <span></span> 
             Quit</button>
         </div>
-        <div className={`piece-modal-outer piece-modal-view ${this.state.turn === 'no-one' ? 'disabled' : ''}`} >
+        <div className={`piece-modal-outer piece-modal-view ${this.state.turn === 'no-one' ? 'disabled' : 'game-started'}`} >
           {pieceModalContainer.map( (piece,index) =>
             <div 
             key={piece.name} 
             onClick={() => this.placePlayer(index,piece.xPos,piece.yPos)} 
             className={`player player-position`}
-            >
-              {index}
-            </div>
+            ></div>
           )}
           {this.state.modalState.map( (piece,index) =>
             <div 
               key={`p${index}`} 
-              className={`player player-on-view ${piece.playerColor} p${piece.playerOnPosition}`} 
+              className={`player player-on-view ${piece.playerColor} p${piece.playerOnPosition} ${piece.active ? 'active-player': ''}`} 
               style={{transform: `translate(${piece.xPos}px,${piece.yPos}px)`}}
-              onClick={() => this.pickingPlayer(piece.playerColor,parseInt(piece.playerOnPosition))} 
+              onClick={() => this.pickingPlayer(piece.playerColor,parseInt(piece.playerOnPosition),piece.name)} 
               data-on-position={piece.playerOnPosition}
             />
           )}
@@ -365,14 +366,7 @@ class Pieces extends Component {
               <div className="game-timer" >
                 {this.state.turn === "player-1" ? `${this.state.timerMin}:${this.state.timerSec}` : '0:00'}
               </div>
-              <button className="btn btn-neon  turn-change" onClick={this.turnChange}>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                Turn Change
-              </button>
-          </div>
+            </div>
         </div>
         <div className={`side-modal side-modal-2 ${this.state.turn !== "player-2" ? 'disabled' : ''}`}>
           <div className="message-Modal" >
@@ -382,11 +376,6 @@ class Pieces extends Component {
               <div className="game-timer" >
                 {this.state.turn === "player-2" ? `${this.state.timerMin}:${this.state.timerSec}` : '0:00'}
               </div>
-              <button className="btn btn-neon turn-change" onClick={this.turnChange}>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>Turn Change</button>
           </div>
         </div>
       </>

@@ -9,6 +9,7 @@ class PieceModal {
     this.playerColor = playerColor;
     this.xPos = xPos;
     this.yPos = yPos;
+    this.active = false;
   }
 }
 
