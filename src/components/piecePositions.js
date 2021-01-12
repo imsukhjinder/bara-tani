@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {pieceModalContainer} from "./gamePieceModal";
-import {KillIcon} from './icons';
+import {CloseIcon} from './icons';
 
 class Pieces extends Component {
 
@@ -16,12 +16,22 @@ class Pieces extends Component {
     turnTime: 120,
     paused: false,
     pausedTime: 0,
-    currentActive: 12
+    currentActive: 12,
+    errorMsg: false
   }
 
   playerPickedNull = () => {
     this.setState({
       playerPicked: 'null'
+    });
+  }
+
+  unsetActivePlayer = () => {
+    let newModal = this.state.modalState;
+    newModal[this.state.currentActive].active = false;
+
+    this.setState({
+      modalState: newModal
     });
   }
 
@@ -135,23 +145,21 @@ class Pieces extends Component {
         });
       }
       else {
-        alert('Move not allowed');
-        this.playerPickedNull();
+        this.raiseError('Move not allowed');
       } 
     }
     else if(playerPlaying !== this.state.turn && this.state.playerPicked !== 'null') {
-      alert('Wrong Move');
-      this.playerPickedNull();
+      this.raiseError('Wrong Move');
     }
     else {
-      alert('Not your player' + playerPlaying);
+      this.raiseError('Not your player');
     }
   }
 
   placePlayer = (name,xPos,yPos) => {
     // console.log(name,xPos,yPos);
     if(this.state.playerPicked === 'null') {
-      alert('no player picked') 
+      this.raiseError('no player picked');
     }
     else {
       let legalMove = this.checkLegalMove(this.state.playerPicked,name);
@@ -166,11 +174,10 @@ class Pieces extends Component {
         this.playerPickedNull();
       }
       else {
-        alert('wrong Move,'+legalMove+','+dead);
+        this.raiseError('wrong Move');
       }
 
       if(dead) {
-        //alert(dead + ' is dead');
         let deadPlayerIndex = newModal.find(e => (e.playerOnPosition === dead && e.playerColor !== "dead-player"));
         let playerDead = newModal[deadPlayerIndex.name].playerColor;
 
@@ -244,7 +251,7 @@ class Pieces extends Component {
           this.setState({
             modalState: newModal
           });
-          alert("player died");
+          this.raiseError('player died');
           this.turnChange();
         }
 
@@ -271,7 +278,8 @@ class Pieces extends Component {
       timerSec: 0,
       paused: false,
       pausedTime: 0,
-      currentActive: 12
+      currentActive: 12,
+      errorMsg: false
     })
   }
 
@@ -298,47 +306,79 @@ class Pieces extends Component {
     alert("Will be working Shortly");
   }
 
+  raiseError = msg => {
+    this.setState({
+      errorMsg: msg
+    });
+  }
+
+  closeError = () => {
+    this.setState({
+      errorMsg: false
+    });
+  }
+
+  changePlayer = () => {
+    this.playerPickedNull();
+    this.unsetActivePlayer();
+  }
+
   render() {
     return(
       <>
-        <div className="nav-top">
-          <button className="btn btn-neon" onClick={this.gameStart}>
-            <span></span>  
-            <span></span>  
-            <span></span>  
-            <span></span>  
-            Start
-          </button>
-          <button className="btn btn-neon turn-change" onClick={this.turnChange}>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>Turn Change
-          </button>
-          <button className="btn btn-neon" onClick={this.gamePause}>
-            <span></span>  
-            <span></span>  
-            <span></span>  
-            <span></span> 
-            Pause</button>
-          <button className="btn btn-neon" onClick={this.gamePlay} disabled={!this.state.paused}>
-            <span></span>  
-            <span></span>  
-            <span></span>  
-            <span></span> 
-            Play</button>
-          <button className="btn btn-neon" onClick={this.undoMove}>
-            <span></span>  
-            <span></span>  
-            <span></span>  
-            <span></span> 
-            Undo</button>
-          <button className="btn btn-neon mr-0" onClick={this.gameStop}>
+        <div className={`cube flip-to-top nav-top ${this.state.turn === 'no-one' ? 'game-btns-view' : 'hide-start-btn'} ${this.state.errorMsg ? 'error-msg' : ''} `}>
+          <div className="default-state">
+            <button className="btn btn-neon btn-game-start" onClick={this.gameStart}>
+              <span></span>  
+              <span></span>  
+              <span></span>  
+              <span></span>  
+              Start
+            </button>
+            <button className="btn btn-neon turn-change" onClick={this.turnChange}>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>Turn Change
+            </button>
+            <button className={`btn btn-neon btn-play-pause ${this.state.paused ? 'd-none': ''}`} onClick={this.gamePause}>
+              <span></span>  
+              <span></span>  
+              <span></span>  
+              <span></span> 
+              Pause</button>
+            <button className={`btn btn-neon btn-play-pause ${!this.state.paused ? 'd-none': ''}`} onClick={this.gamePlay}>
+              <span></span>  
+              <span></span>  
+              <span></span>  
+              <span></span> 
+              Play</button>
+            <button className="btn btn-neon d-none" onClick={this.undoMove}>
+              <span></span>  
+              <span></span>  
+              <span></span>  
+              <span></span> 
+              Undo</button>
+            <button className="btn btn-neon turn-change" onClick={this.changePlayer}>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>Change Player
+            </button>
+            <button className="btn btn-neon mr-0" onClick={this.gameStop}>
             <span></span>  
             <span></span>  
             <span></span>  
             <span></span> 
             Quit</button>
+          </div>
+          <div className="active-state">
+            <div className="active-state-border" ></div>
+            {this.state.errorMsg}
+            <button className="close-icon-outer" onClick={this.closeError}>
+              <CloseIcon mainClass="close-icon" />
+            </button>
+          </div>
         </div>
         <div className={`piece-modal-outer piece-modal-view ${this.state.turn === 'no-one' ? 'disabled' : 'game-started'}`} >
           {pieceModalContainer.map( (piece,index) =>
