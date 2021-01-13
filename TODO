@@ -1,9 +1,16 @@
-Undo Last Move
-Change UI
 Add Game Animations
+  - Player Out Animation 
 Add Game Audios
+  - Game Started
+  - Player Moved
+  - Player Out
+  - Error
+  - Win Audios
+Responsiveness
 Make Game Online 2 player
+Undo Last Move
 Add calling with game
+Code improvment
 
 Bugs:-
 User can change turn by just moving backward-forward player

@@ -176,8 +176,7 @@ class Pieces extends Component {
             playerOneDead: this.state.playerOneDead + 1
           });
         }
-
-        if(playerDead === 'player-2') {
+        else if(playerDead === 'player-2') {
           this.setState({
             playerTwoDead: this.state.playerTwoDead + 1
           });
@@ -187,17 +186,15 @@ class Pieces extends Component {
         this.setState({
           modalState: newModal
         });
-      
-        if(this.state.playerTwoDead === 11) {
-          alert("Player 1 wins");
-          this.gameStop();
-        }
 
-        if(this.state.playerOneDead === 11) {
-          alert("Player 2 wins");
-          this.gameStop();
+        if(this.state.playerOneDead === 2) {
+          alert('reached here');
+          setTimeout(() => { 
+            this.gameStop();
+          },3000);
         }
       }
+
       this.setState({
         playerPicked: name
       });
@@ -383,19 +380,18 @@ class Pieces extends Component {
             />
           )}
         </div>
-        <div className="side-modal-outer" >
-          <div className={`side-modal side-modal-1 ${this.state.turn !== "player-1" ? 'disabled' : ''}`}>
-            <div className="message-Modal" >
-                <h1 className="board-heading">Player 1</h1>
-                <h2>Kills {this.state.playerTwoDead}</h2>
-                <h3>Dead {this.state.playerOneDead}</h3>
-                <div className="game-timer" >
-                  {this.state.turn === "player-1" ? `${this.state.timerMin}:${this.state.timerSec}` : '0:00'}
-                </div>
+        <div className={`side-modal side-modal-1 ${this.state.playerTwoDead === 12 ? 'player-win player-win-1' : ''}`}>
+          <div className="message-Modal" >
+              <h1 className="board-heading">Player 1</h1>
+              <h2>Kills {this.state.playerTwoDead}</h2>
+              <h3>Dead {this.state.playerOneDead}</h3>
+              <div className="game-timer" >
+                {this.state.turn === "player-1" ? `${this.state.timerMin}:${this.state.timerSec}` : '0:00'}
               </div>
+              <h1 className="board-heading board-heading-win">Wins</h1>
           </div>
         </div>
-        <div className={`side-modal side-modal-2 ${this.state.turn !== "player-2" ? 'disabled' : ''}`}>
+        <div className={`side-modal side-modal-2 ${this.state.playerOneDead === 12 ? 'player-win player-win-2' : ''}`}>
           <div className="message-Modal" >
               <h1 className="board-heading">Player 2</h1>
               <h2> Kills {this.state.playerOneDead}</h2>
@@ -403,6 +399,7 @@ class Pieces extends Component {
               <div className="game-timer" >
                 {this.state.turn === "player-2" ? `${this.state.timerMin}:${this.state.timerSec}` : '0:00'}
               </div>
+              <h1 className="board-heading board-heading-win">Wins</h1>
           </div>
         </div>
         <div className="menu-toggle" onClick={this.showMenus}>
