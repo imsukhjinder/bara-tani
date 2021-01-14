@@ -1,11 +1,9 @@
 Add Game Animations
   - Player Out Animation 
-Add Game Audios
-  - Game Started
-  - Player Moved
-  - Player Out
-  - Error
-  - Win Audios
+  - Board colors
+  - Kill Increase
+  - Time Goes Out
+Sound Off
 Responsiveness
 Make Game Online 2 player
 Undo Last Move

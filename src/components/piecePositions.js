@@ -1,6 +1,11 @@
 import React, {Component} from "react";
 import {pieceModalContainer} from "./gamePieceModal";
 import { CloseIcon,StartIcon,ChangeIcon } from './icons';
+import GameStart from '../sounds/game-start.mp3';
+import PlayerOut from '../sounds/player-out.wav';
+import ErrorSound from '../sounds/error.wav';
+import GameWin from '../sounds/win.wav';
+import ShiftChange from '../sounds/shift.wav';
 
 class Pieces extends Component {
 
@@ -18,9 +23,16 @@ class Pieces extends Component {
     pausedTime: 0,
     currentActive: 12,
     errorMsg: false,
-    menuOpen: false
+    menuOpen: false,
+    soundOn: true,
   }
 
+  playSound = sound => {
+    if(this.state.soundOn) {
+      let audio = new Audio(sound);
+      audio.play();
+    }
+  }
   playerPickedNull = () => {
     this.setState({
       playerPicked: 'null'
@@ -58,6 +70,7 @@ class Pieces extends Component {
       modalState: newModal
     });
     this.turnTimerOn();
+    this.playSound(ShiftChange);
   }
 
   checkDeath = (start,end) => {
@@ -185,14 +198,15 @@ class Pieces extends Component {
         newModal[deadPlayerIndex.name].playerColor = 'dead-player';
         this.setState({
           modalState: newModal
+        },function(){
+          if(this.state.playerOneDead === 12 || this.state.playerTwoDead === 12) {
+            this.playSound(GameWin);
+            setTimeout(() => { 
+              this.gameStop();
+            },3000);
+          }
         });
-
-        if(this.state.playerOneDead === 2) {
-          alert('reached here');
-          setTimeout(() => { 
-            this.gameStop();
-          },3000);
-        }
+        this.playSound(PlayerOut);
       }
 
       this.setState({
@@ -246,6 +260,7 @@ class Pieces extends Component {
   }
 
   gameStart = () => {
+    this.playSound(GameStart);
     this.setState({
       turn: 'player-1'
     })
@@ -298,6 +313,11 @@ class Pieces extends Component {
       errorMsg: msg
     });
     document.querySelector('#root').classList.add('show-error');
+    this.playSound(ErrorSound);
+
+    setTimeout(() => { 
+      this.closeError();
+    },3000);
   }
 
   closeError = () => {
@@ -325,6 +345,25 @@ class Pieces extends Component {
         menuOpen: true
       })
     }
+  }
+
+  handleShiftKey = (e) => {
+    // alert(e.keyCode);
+    if(e.keyCode === 16) {
+      this.turnChange();
+    }
+
+    if(e.keyCode === 27) {
+      this.closeError();
+    }
+  }
+
+  componentDidMount = () => {
+    document.addEventListener("keydown", this.handleShiftKey.bind(this));
+  }
+
+  componentWillUnmount = () => {
+    document.removeEventListener("keydown", this.handleShiftKey.bind(this));
   }
 
   render() {

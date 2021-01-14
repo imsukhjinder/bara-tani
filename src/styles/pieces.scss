@@ -113,7 +113,6 @@
 }
 
 .message-Modal {
-    border-radius: 20px;
     background: $bg-color;
     box-shadow:  -23px 23px 48px #111111,
              23px -23px 48px #2d2d2d;
@@ -171,7 +170,7 @@
 }
 
 .nav-top {
-    position: absolute;
+    position: fixed;
     width: 100%;
     bottom: 0;
     left: 0;
@@ -500,6 +499,7 @@
 .error-msg {
     position: fixed;
     top: 0;
+    left: 0;
     transition: 0.3s ease-in-out;
     background-color: #f85f54;
     color: #fff;
