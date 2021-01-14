@@ -6,6 +6,8 @@ import PlayerOut from '../sounds/player-out.wav';
 import ErrorSound from '../sounds/error.wav';
 import GameWin from '../sounds/win.wav';
 import ShiftChange from '../sounds/shift.wav';
+import GameBoard from './gameBord';
+import {PlayersPieces,Button,SideModal} from './uiComponent';
 
 class Pieces extends Component {
 
@@ -304,10 +306,6 @@ class Pieces extends Component {
     })
   }
 
-  undoMove = () => {
-    alert("Will be working Shortly");
-  }
-
   raiseError = msg => {
     this.setState({
       errorMsg: msg
@@ -347,7 +345,7 @@ class Pieces extends Component {
     }
   }
 
-  handleShiftKey = (e) => {
+  handleKeyPress = e => {
     // alert(e.keyCode);
     if(e.keyCode === 16) {
       this.turnChange();
@@ -358,89 +356,74 @@ class Pieces extends Component {
     }
   }
 
+  handleSound = () => {
+    this.setState({
+      soundOn: !this.state.soundOn
+    })
+  }
+
   componentDidMount = () => {
-    document.addEventListener("keydown", this.handleShiftKey.bind(this));
+    document.addEventListener("keydown", this.handleKeyPress.bind(this));
   }
 
   componentWillUnmount = () => {
-    document.removeEventListener("keydown", this.handleShiftKey.bind(this));
+    document.removeEventListener("keydown", this.handleKeyPress.bind(this));
   }
 
   render() {
     return(
       <>
-        <div className={`nav-top ${this.state.turn === 'no-one' ? 'game-btns-view' : 'hide-start-btn'}`}>
-          <button className={`btn btn-neon btn-play-pause ${this.state.paused ? 'd-none': ''}`} onClick={this.gamePause}>
-            <span></span>  
-            <span></span>  
-            <span></span>  
-            <span></span> 
-            Pause</button>
-          <button className={`btn btn-neon btn-play-pause ${!this.state.paused ? 'd-none': ''}`} onClick={this.gamePlay}>
-            <span></span>  
-            <span></span>  
-            <span></span>  
-            <span></span> 
-            Play</button>
-          <button className="btn btn-neon d-none" onClick={this.undoMove}>
-            <span></span>  
-            <span></span>  
-            <span></span>  
-            <span></span> 
-            Undo</button>
-          <button className="btn btn-neon turn-change" onClick={this.changePlayer}>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>Change Player
-          </button>
-          <button className="btn btn-neon mr-0" onClick={this.gameStop}>
-            <span></span>  
-            <span></span>  
-            <span></span>  
-            <span></span> 
-            Quit</button>
+        <div className="nav-top">
+          <Button 
+            buttonName="Pause" 
+            buttonFunction={this.gamePause}
+            buttonClasses={`btn-play-pause ${this.state.paused ? 'd-none': ''}`} 
+          />
+          <Button 
+            buttonName="Play" 
+            buttonFunction={this.gamePlay}
+            buttonClasses={`btn-play-pause ${!this.state.paused ? 'd-none': ''}`} 
+          />
+          <Button 
+            buttonName="Change Player" 
+            buttonFunction={this.changePlayer}
+          />
+          <Button 
+            buttonName={`Sound ${this.state.soundOn ? 'Off' : 'On'}`} 
+            buttonFunction={this.handleSound}
+            buttonClasses="btn-sound" 
+          />
+          <Button 
+            buttonName="Quit" 
+            buttonFunction={this.gameStop}
+            buttonClasses="mr-0" 
+          />
         </div>
-        <div className={`piece-modal-outer piece-modal-view ${this.state.turn === 'no-one' ? 'disabled' : 'game-started'}`} >
-          {pieceModalContainer.map( (piece,index) =>
-            <div 
-            key={piece.name} 
-            onClick={() => this.placePlayer(index,piece.xPos,piece.yPos)} 
-            className={`player player-position`}
-            ></div>
-          )}
-          {this.state.modalState.map( (piece,index) =>
-            <div 
-              key={`p${index}`} 
-              className={`player player-on-view ${piece.playerColor} p${piece.playerOnPosition} ${piece.active ? 'active-player': ''}`} 
-              style={{transform: `translate(${piece.xPos}px,${piece.yPos}px)`}}
-              onClick={() => this.pickingPlayer(piece.playerColor,parseInt(piece.playerOnPosition),piece.name)} 
-              data-on-position={piece.playerOnPosition}
-            />
-          )}
+        <div className="game-board-main" >
+          <GameBoard />
+          <PlayersPieces 
+            turn={this.state.turn} 
+            modalState={this.state.modalState}
+            placePlayer={this.placePlayer}
+            pickingPlayer={this.pickingPlayer}
+          />
         </div>
-        <div className={`side-modal side-modal-1 ${this.state.playerTwoDead === 12 ? 'player-win player-win-1' : ''}`}>
-          <div className="message-Modal" >
-              <h1 className="board-heading">Player 1</h1>
-              <h2>Kills {this.state.playerTwoDead}</h2>
-              <h3>Dead {this.state.playerOneDead}</h3>
-              <div className="game-timer" >
-                {this.state.turn === "player-1" ? `${this.state.timerMin}:${this.state.timerSec}` : '0:00'}
-              </div>
-              <h1 className="board-heading board-heading-win">Wins</h1>
-          </div>
-        </div>
-        <div className={`side-modal side-modal-2 ${this.state.playerOneDead === 12 ? 'player-win player-win-2' : ''}`}>
-          <div className="message-Modal" >
-              <h1 className="board-heading">Player 2</h1>
-              <h2> Kills {this.state.playerOneDead}</h2>
-              <h3>Dead {this.state.playerTwoDead}</h3>
-              <div className="game-timer" >
-                {this.state.turn === "player-2" ? `${this.state.timerMin}:${this.state.timerSec}` : '0:00'}
-              </div>
-              <h1 className="board-heading board-heading-win">Wins</h1>
-          </div>
-        </div>
+        <SideModal
+          modalNumber="1"
+          kills={this.state.playerTwoDead}
+          dead={this.state.playerOneDead}
+          turn={this.state.turn}
+          timerMin={this.state.timerMin}
+          timerSec={this.state.timerSec}
+        />
+        <SideModal
+          modalNumber="2"
+          kills={this.state.playerOneDead}
+          dead={this.state.playerTwoDead}
+          turn={this.state.turn}
+          timerMin={this.state.timerMin}
+          timerSec={this.state.timerSec}
+        />
         <div className="menu-toggle" onClick={this.showMenus}>
           <div class={`navToggle ${this.state.menuOpen? 'open' : ''}`}>
             <div class="icon-left"></div>
