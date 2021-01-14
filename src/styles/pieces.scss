@@ -97,8 +97,6 @@
         height: rem-calc($board-size + $piece-size);
         margin-left: 50%;
         transform: translateX(-50%);
-        margin-top: 50px;
-        margin-bottom: 50px;
         z-index: 10;
     }
 
@@ -446,6 +444,9 @@
     position: relative;
     max-width: 1299px;
     margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &.show-menus {
         height: calc(100vh + 60px);
@@ -518,4 +519,46 @@
 
 .btn-sound {
     min-width: 135px;
+}
+
+.game-board-main {
+    position: relative;
+}
+
+@media (max-width: 1024px) {
+    .side-modal {
+        top: 0;
+        width: 100%;
+        left: 0;
+    }
+
+    .message-Modal {
+        display: flex;
+        justify-content: space-between;
+
+        h2 {
+            order: -1;
+        }
+    }
+
+    .board-heading {
+        margin-bottom: 0 !important;
+    }
+
+    .game-timer {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 70px;
+    }
+
+    .side-modal-2 {
+        top: auto;
+        bottom: 0;
+        right: 0;
+
+        .game-timer {
+            top: -70px;
+        }
+    }
 }

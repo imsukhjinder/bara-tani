@@ -425,9 +425,9 @@ class Pieces extends Component {
           timerSec={this.state.timerSec}
         />
         <div className="menu-toggle" onClick={this.showMenus}>
-          <div class={`navToggle ${this.state.menuOpen? 'open' : ''}`}>
-            <div class="icon-left"></div>
-            <div class="icon-right"></div>
+          <div className={`navToggle ${this.state.menuOpen? 'open' : ''}`}>
+            <div className="icon-left"></div>
+            <div className="icon-right"></div>
           </div>
         </div>
         <div className="menu-toggle menu-toggle-right" onClick={this.turnChange}>
