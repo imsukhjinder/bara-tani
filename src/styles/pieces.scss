@@ -544,6 +544,7 @@
     .message-Modal {
         display: flex;
         justify-content: space-between;
+        align-items: center;
 
         h2 {
             order: -1;
@@ -579,7 +580,8 @@
 
     .menu-toggle {
         bottom: 100px;
-        box-shadow: -5px -11px 36px #151515, -18px -19px 36px #1f1e1e;
+        box-shadow: none;
+        background: #161616;
     }
 
     .nav-top {
@@ -666,6 +668,7 @@
     .game-board {
         width: rem-calc($board-size);
         height: rem-calc($board-size);
+        box-shadow: -35px 35px 70px #111111, 35px -35px 70px #141414;
 
         &:after,
         &:before {
@@ -707,7 +710,7 @@
 
     .game-timer {
         font-size: 28px;
-        top: 60px
+        top: 70px
     }
 
     .side-modal-2 {
@@ -726,7 +729,7 @@
         }
 
         &-up {
-            top: 70px;
+            top: 60px;
         }
     }
 

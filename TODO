@@ -4,17 +4,10 @@ Add Game Animations
   - Kill Increase
   - Time Goes Out
 
-Icon's and Name for game in Index page
-Rotate Board
 Make Game Online 2 player
+Game Stop function not working properly
+Rotate Board
 Undo Last Move
+Legal Move
 Add calling with game
 Code improvment
-
-Bugs:-
-User can change turn by just moving backward-forward player
-User can move player after second move or opponent player death
-
-UI- videos
-on wining - https://www.youtube.com/watch?v=Q4ta_NZOYwE
-            https://www.youtube.com/watch?v=ex7jGbyFgpA

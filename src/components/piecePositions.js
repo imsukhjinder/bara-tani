@@ -165,7 +165,7 @@ class Pieces extends Component {
 
   placePlayer = (name,xPos,yPos) => {
     if(this.state.playerPicked === 'null') {
-      this.raiseError('no player picked');
+      this.raiseError('No player picked');
     }
     else {
       let legalMove = this.checkLegalMove(this.state.playerPicked,name);
@@ -180,7 +180,7 @@ class Pieces extends Component {
         this.playerPickedNull();
       }
       else {
-        this.raiseError('wrong Move');
+        this.raiseError('Wrong Move');
       }
 
       if(dead) {
@@ -255,7 +255,7 @@ class Pieces extends Component {
           this.setState({
             modalState: newModal
           });
-          this.raiseError('player died');
+          this.raiseError('Player died');
           this.turnChange();
         }
 
