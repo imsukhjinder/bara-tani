@@ -6,8 +6,7 @@ import PlayerOut from '../sounds/player-out.wav';
 import ErrorSound from '../sounds/error.wav';
 import GameWin from '../sounds/win.wav';
 import ShiftChange from '../sounds/shift.wav';
-import GameBoard from './gameBord';
-import {PlayersPieces,Button,SideModal} from './uiComponent';
+import {PlayersPieces,Button,SideModal,GameBoard} from './uiComponent';
 
 class Pieces extends Component {
 
@@ -28,6 +27,8 @@ class Pieces extends Component {
     menuOpen: false,
     soundOn: true,
   }
+
+  baseState = JSON.parse(JSON.stringify(this.state));
 
   playSound = sound => {
     if(this.state.soundOn) {
@@ -271,20 +272,8 @@ class Pieces extends Component {
 
   gameStop = () => {
     clearInterval(this.ts);
-    this.setState({
-      modalState: JSON.parse(JSON.stringify(pieceModalContainer)), 
-      playerPicked: 'null',
-      goingTo: 'null',
-      turn: 'no-one',
-      playerOneDead: 0,
-      playerTwoDead: 0,
-      timerMin: 0,
-      timerSec: 0,
-      paused: false,
-      pausedTime: 0,
-      currentActive: 12,
-      errorMsg: false
-    })
+    this.setState(this.baseState)
+    this.showMenus();
   }
 
   gamePause = () => {
@@ -333,16 +322,9 @@ class Pieces extends Component {
   showMenus = () => {
     document.querySelector('#root').classList.toggle('show-menus');
 
-    if(this.state.menuOpen) {
-      this.setState({
-        menuOpen: false
-      })
-    }
-    else {
-      this.setState({
-        menuOpen: true
-      })
-    }
+    this.setState({
+      menuOpen: !this.state.menuOpen
+    })
   }
 
   handleKeyPress = e => {
@@ -406,6 +388,7 @@ class Pieces extends Component {
             modalState={this.state.modalState}
             placePlayer={this.placePlayer}
             pickingPlayer={this.pickingPlayer}
+            pieceModalContainer={pieceModalContainer}
           />
         </div>
         <SideModal
@@ -430,11 +413,14 @@ class Pieces extends Component {
             <div className="icon-right"></div>
           </div>
         </div>
-        <div className="menu-toggle menu-toggle-right" onClick={this.turnChange}>
+        <div className={`menu-toggle menu-toggle-right ${this.state.turn === 'player-1' ? 'd-none' : ''}`} onClick={this.turnChange}>
           <ChangeIcon mainClass={`change-icon ${this.state.turn === "player-1" ? 'change-icon-1' : 'change-icon-2'}`} />
         </div>
         <div className={`menu-toggle menu-toggle-right ${this.state.turn === 'no-one' ? '' : 'd-none'}`} onClick={this.gameStart}>
           <StartIcon mainClass="start-icon" />
+        </div>
+        <div className={`menu-toggle menu-toggle-up ${this.state.turn === 'no-one' || this.state.turn === 'player-2' ? 'd-none' : ''}`} onClick={this.turnChange}>
+          <ChangeIcon mainClass={`change-icon ${this.state.turn === "player-1" ? 'change-icon-1' : 'change-icon-2'}`} />
         </div>
         <div className="error-msg">
             {this.state.errorMsg}

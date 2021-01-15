@@ -1,10 +1,9 @@
 import React from 'react';
-import {pieceModalContainer} from "./gamePieceModal";
 
 export const PlayersPieces = (props) => {
     return(
     <div className={`piece-modal-outer piece-modal-view ${props.turn === 'no-one' ? 'disabled' : 'game-started'}`} >
-        {pieceModalContainer.map( (piece,index) =>
+        {props.pieceModalContainer.map( (piece,index) =>
           <div 
             key={piece.name} 
             onClick={() => props.placePlayer(index,piece.xPos,piece.yPos)} 
@@ -50,4 +49,13 @@ export const SideModal = (props) => {
           </div>
         </div>
     )
+}
+
+export const GameBoard = () => {
+  return(
+    <div className="game-board">
+      <div className="game-board-outer" />
+      <div className="game-board-outer game-board-outer-2" />
+    </div>
+  )
 }

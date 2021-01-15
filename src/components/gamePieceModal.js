@@ -1,6 +1,13 @@
 export let pieceModalContainer = [];
 let boardSize= 540;
 
+if(window.innerHeight < 768) {
+  boardSize= 450
+}
+if(window.innerWidth < 560) {
+  boardSize= 320
+}
+
 class PieceModal {
   constructor(name,xPos,yPos,playerColor) {
     this.name = name;
