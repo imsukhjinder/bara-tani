@@ -7,6 +7,9 @@ import ErrorSound from '../sounds/error.wav';
 import GameWin from '../sounds/win.wav';
 import ShiftChange from '../sounds/shift.wav';
 import {PlayersPieces,Button,SideModal,GameBoard} from './uiComponent';
+import io from "socket.io-client";
+const ENDPOINT = 'http://localhost:5000/';
+let socket = io(ENDPOINT);
 
 class Pieces extends Component {
 
@@ -336,6 +339,11 @@ class Pieces extends Component {
     if(e.keyCode === 27) {
       this.closeError();
     }
+    socket.emit('Move-Done', this.state);
+  }
+
+  handleClickDoc = e => {
+    socket.emit('Move-Done', this.state);
   }
 
   handleSound = () => {
@@ -346,6 +354,11 @@ class Pieces extends Component {
 
   componentDidMount = () => {
     document.addEventListener("keydown", this.handleKeyPress.bind(this));
+    document.addEventListener("click", this.handleClickDoc.bind(this));
+
+    socket.on('Move-Done', (stateServer) => {
+      this.setState(stateServer);
+    });
   }
 
   componentWillUnmount = () => {
